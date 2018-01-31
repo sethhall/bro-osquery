@@ -55,8 +55,6 @@ event bro_init()
         {
         Log::create_stream(LOG, [$columns=Info, $path="osq-processes"]);
 
-	Broker::enable();
-
         local query = [$ev=host_processes,$query="SELECT pid,name,path,cmdline,cwd,root,uid,gid,on_disk,start_time,parent,pgroup FROM processes"];
         osquery::subscribe(query);
         }

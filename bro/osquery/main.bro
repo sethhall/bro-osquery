@@ -4,7 +4,7 @@
 @load ./utils/host_interfaces
 
 const broker_port: port = 9999/tcp &redef;
-redef Broker::endpoint_name = "Bro";
+#redef Broker::endpoint_name = "Bro";
 
 module osquery;
 
@@ -369,14 +369,14 @@ function send_subscribe(topic: string, query: Query)
     local resT = topic;
     if ( query?$resT )
         resT = query$resT;
-    Broker::subscribe_to_events(resT);
+    Broker::subscribe(resT);
 
     local inter: count = 10;
     if ( query?$inter )
         inter = query$inter;
 
-    local ev_args = Broker::event_args(host_subscribe, ev_name, query$query, cookie, resT, update_type, inter);
-    Broker::send_event(host_topic, ev_args);
+    local ev_args = Broker::make_event(host_subscribe, ev_name, query$query, cookie, resT, update_type, inter);
+    Broker::publish(host_topic, ev_args);
 }
 
 function send_unsubscribe(topic: string, query: Query)
@@ -404,8 +404,8 @@ function send_unsubscribe(topic: string, query: Query)
     if ( query?$inter )
         inter = query$inter;
 
-    local ev_args = Broker::event_args(host_unsubscribe, ev_name, query$query, cookie, resT, update_type, inter);
-    Broker::send_event(host_topic, ev_args);
+    local ev_args = Broker::make_event(host_unsubscribe, ev_name, query$query, cookie, resT, update_type, inter);
+    Broker::publish(host_topic, ev_args);
 }
 
 function send_execute(topic: string, q: Query)
@@ -421,16 +421,16 @@ function send_execute(topic: string, q: Query)
     local resT = topic;
     if ( q?$resT )
         resT = q$resT;
-    Broker::subscribe_to_events(resT);
+    Broker::subscribe(resT);
 
-    local ev_args = Broker::event_args(host_execute, ev_name, q$query, cookie, resT, "SNAPSHOT");
-    Broker::send_event(host_topic, ev_args);
+    local ev_args = Broker::make_event(host_execute, ev_name, q$query, cookie, resT, "SNAPSHOT");
+    Broker::publish(host_topic, ev_args);
 }
 
 function send_join(host_topic: string, group: string)
 {
-    local ev_args = Broker::event_args(host_join, group);
-    Broker::send_event(host_topic, ev_args);
+    local ev_args = Broker::make_event(host_join, group);
+    Broker::publish(host_topic, ev_args);
 }
 
 
@@ -762,16 +762,16 @@ event bro_init()
 {
     Log::create_stream(LOG, [$columns=Info, $path="osquery"]);
 
+    
+    local topic = HostAnnounceTopic;
+    log_local("info", fmt("subscribing to topic %s", topic));
+    Broker::subscribe(topic);
+    
     # TODO: Not sure this should stay here. We still need to figure out a way
     # for different applications to use Broker jointly without messing up
     # whatever another one is doing.
-    Broker::enable();
 
-    local topic = HostAnnounceTopic;
-    log_local("info", fmt("subscribing to topic %s", topic));
-    Broker::subscribe_to_events(topic);
-
-    Broker::listen(9999/tcp, "0.0.0.0");
+    Broker::listen("0.0.0.0", 9999/tcp);
 }
 
 ###
