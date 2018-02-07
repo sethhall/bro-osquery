@@ -39,8 +39,6 @@ To update broker, we refer to the broker branch `topic/actor-system` and caf bra
 git merge bro_integration_actor
 ```
 
-However, this currently fails when building broker as dependency
-
 ### Build osquery
 
 ```
