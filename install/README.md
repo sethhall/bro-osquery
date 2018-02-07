@@ -12,19 +12,20 @@ More recent development is located in the [osquery fork by iBigQ](https://github
 
 ```
 git clone https://github.com/iBigQ/osquery
-git checkout bro_integration
+cd osquery
+git checkout bro-integration
 git submodule update --init
-git checkout -b bro_integration_local
+git checkout -b bro-integration-local
 ```
 
 ### Update osquery
 
 At this point, we have the exact version as in the `bro-integration` branch of the osquery repository. 
 However, the osquery version in place is too old to be compiled. Therefore, we have to update to the latest osquery version (2.11.2).
-This is already submitted upstream [PR #4093](https://github.com/facebook/osquery/pull/4093)
+This is already submitted upstream [PR #4093](https://github.com/facebook/osquery/pull/4093).
 
 ```
-git merge bro-integration-2.11.2
+git merge origin/bro-integration-2.11.2
 git submodule update --init
 ```
 
@@ -34,9 +35,10 @@ At this point, we have a working source of the lastest osquery with the support 
 As the next optional step, we can update broker. As in the `bro-integration` branch, the broker version 0.6 and caf version 0.14.6 is used.
 
 To update broker, we refer to the broker branch `topic/actor-system` and caf branch `develop`. 
+This is already submitted upstream [PR #3732](https://github.com/facebook/osquery/pull/3732).
 
 ```
-git merge bro_integration_actor
+git merge origin/bro_integration_actor
 ```
 
 ### Build osquery
