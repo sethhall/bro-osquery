@@ -12,9 +12,9 @@ More recent development is located in the [osquery fork by iBigQ](https://github
 
 ```
 git clone https://github.com/iBigQ/osquery
-git checkout bro-integration
+git checkout bro_integration
 git submodule update --init
-git checkout -b bro-integration-local
+git checkout -b bro_integration_local
 ```
 
 ### Update osquery
