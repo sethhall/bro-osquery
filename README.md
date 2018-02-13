@@ -1,4 +1,4 @@
-# The Bro-Osquery Project#
+# The Bro-Osquery Project
 This extension adds a Bro interface to the host monitor [osquery](https://osquery.io), enabling the network monitor [Bro](https://www.bro.org) to subscribe to changes from hosts as a continous stream of events. The extension is controlled from Bro scripts, which sends SQL-style queries to the hosts and then begins listening for any updates coming back. Host events are handled by Bro scripts the same way as network events.
 
 Here, you see an example script to be loaded by Bro, using osquery and our bro-osuqery framework to make hosts report about server applications as soon as it starts.
@@ -32,12 +32,14 @@ Now add the **Bro Script Framework** to your bro installation. It can be found i
 
 	bro -i eth0 osquery
 
-**Osquery** is originally a standalone host monitor. We are currently integrating our project into the osquery code. This enables osquery to communicate with bro without any additional modifications. The latest version of this integration branch is also available as a [Github repository](https://github.com/iBigQ/osquery/tree/bro_integration). While we are working on integration, you can check out this development version.
+**Osquery** is originally a standalone host monitor. We are currently integrating our project into the osquery code. This enables osquery to communicate with bro without any additional modifications. The official version for this integration is available as a [branch in the osquery repository](https://github.com/facebook/osquery/tree/bro-integration). For the latest development version, we refer to [this fork](https://github.com/iBigQ/bro-osquery/blob/bro-osquery-actor/install/README.md). Here, we continue to explain how to setup the official version.
 
-	git clone https://github.com/iBigQ/osquery.git
-	cd osquery && git checkout bro_integration
-	make deps && make
-	sudo make install
+	git clone https://github.com/facebook/osquery.git
+	cd osquery && git checkout bro-integration
+	make deps
+	./tools/provision.sh install osquery/osquery-local/caf
+	./tools/provision.sh install osquery/osquery-local/broker
+	SKIP_BRO=False make && sudo make install
 	
 After installation, you can start the osquery daemon and the bro extension:
 
