@@ -1,0 +1,4 @@
+[package]
+description = A framework to support OSQuery with Bro.
+tags = osquery, host, agent, broker, framework
+script_dir = scripts
