@@ -6,37 +6,35 @@ export {
 	redef enum Log::ID += { LOG };
 
 	type Info: record {
-		t: time &log;
-		host: string &log;
-		device: string &log;
+		t:            time &log;
+		host:         string &log;
+		device:       string &log;
 		device_alias: string &log;
-		path: string &log;
-		typ: string &log;
-		blocks_size: int &log;
-		blocks: int &log;
-		flags: string &log;
+		path:         string &log;
+		typ:          string &log;
+		blocks_size:  int &log;
+		blocks:       int &log;
+		flags:        string &log;
 	};
 }
 
 event host_mounts(resultInfo: osquery::ResultInfo,
-		device: string, device_alias: string, path: string, typ: string,
-		blocks_size: int, blocks: int, flags: string)
+                  device: string, device_alias: string, path: string, typ: string,
+                  blocks_size: int, blocks: int, flags: string)
 	{
 	if ( resultInfo$utype != osquery::ADD )
-		# Just want to log new mount existance.
+		# Just want to log new mount existence.
 		return;
 	
-	local info: Info = [
-			 $t=network_time(),
-			 $host=resultInfo$host,
-                      $device = device,
-                      $device_alias = device_alias,
-                      $path = path,
-                      $typ = typ,
-                      $blocks_size = blocks_size,
-                      $blocks = blocks,
-                      $flags = flags
-			               ];
+	local info = Info($t=network_time(),
+	                  $host=resultInfo$host,
+	                  $device = device,
+	                  $device_alias = device_alias,
+	                  $path = path,
+	                  $typ = typ,
+	                  $blocks_size = blocks_size,
+	                  $blocks = blocks,
+	                  $flags = flags);
 	
 	Log::write(LOG, info);
 	}
